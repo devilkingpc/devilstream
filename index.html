@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trailer Preview</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            pointer-events: auto;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        .preview {
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        // Function to toggle Season and Episode fields for TV shows
+        function toggleSeasonEpisodeFields() {
+            var type = document.getElementById('type').value;
+            var seasonEpisodeFields = document.getElementById('seasonEpisodeFields');
+            if (type === 'tv') {
+                seasonEpisodeFields.classList.remove('hidden');
+            } else {
+                seasonEpisodeFields.classList.add('hidden');
+            }
+        }
+
+        // Function to generate custom URL based on user input
+        function generateCustomUrl() {
+            var type = document.getElementById('type').value;
+            var id = document.getElementById('id').value;
+            var season = document.getElementById('season').value;
+            var episode = document.getElementById('episode').value;
+
+            var baseUrl = window.location.origin;
+            var customUrl = "";
+
+            if (type === 'movie') {
+                customUrl = `${baseUrl}/movie/${id}`;
+            } else if (type === 'tv' && season && episode) {
+                customUrl = `${baseUrl}/tv/${id}/season/${season}/episode/${episode}`;
+            }
+
+            return customUrl;
+        }
+
+        // Function to display the generated URL and embed the trailer
+        function previewTrailer(event) {
+            event.preventDefault(); // Prevent form submission
+
+            var customUrl = generateCustomUrl();
+            var previewElement = document.getElementById('preview');
+            var iframeElement = document.getElementById('iframePreview');
+
+            if (customUrl) {
+                previewElement.innerHTML = `<p>Generated URL: <a href="${customUrl}" target="_blank">${customUrl}</a></p>`;
+                iframeElement.src = customUrl;
+            } else {
+                previewElement.innerHTML = `<p>Invalid inputs. Please check your ID, season, and episode.</p>`;
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Trailer Preview</h1>
+        <form id="trailerForm" onsubmit="previewTrailer(event)">
+            <label for="type">Type:</label>
+            <select name="type" id="type" onchange="toggleSeasonEpisodeFields()">
+                <option value="movie">Movie</option>
+                <option value="tv">TV Show</option>
+            </select>
+            <br><br>
+
+            <label for="id">ID (IMDb or TMDB):</label>
+            <input type="text" name="id" id="id" required>
+            <br><br>
+
+            <div id="seasonEpisodeFields" class="hidden">
+                <label for="season">Season (for TV shows):</label>
+                <input type="number" name="season" id="season">
+                <br><br>
+
+                <label for="episode">Episode (for TV shows):</label>
+                <input type="number" name="episode" id="episode">
+                <br><br>
+            </div>
+
+            <input type="submit" value="Preview Trailer">
+        </form>
+
+        <div id="preview" class="preview"></div>
+
+        <h2>Embedded Trailer:</h2>
+        <iframe id="iframePreview" width="100%" height="500px" src=""></iframe>
+    </div>
+</body>
+</html>
