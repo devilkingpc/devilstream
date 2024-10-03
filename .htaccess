@@ -1,0 +1,13 @@
+RewriteEngine On
+
+# Rewrite rule for movies with numeric TMDB ID
+RewriteRule ^movie/([0-9]+)$ trailer.php?type=movie&id=$1 [L,QSA]
+
+# Rewrite rule for movies with IMDb ID (starts with 'tt')
+RewriteRule ^movie/tt([0-9]+)$ trailer.php?type=movie&id=tt$1 [L,QSA]
+
+# Rewrite rule for TV shows with numeric TMDB ID
+RewriteRule ^tv/([0-9]+)/([0-9]+)/([0-9]+)$ trailer.php?type=tv&id=$1&season=$2&episode=$3 [L,QSA]
+
+# Rewrite rule for TV shows with IMDb ID (starts with 'tt')
+RewriteRule ^tv/tt([0-9]+)/([0-9]+)/([0-9]+)$ trailer.php?type=tv&id=tt$1&season=$2&episode=$3 [L,QSA]
